@@ -1,0 +1,155 @@
+---
+title: 'Peer-graded Assignment: Prediction Assignment Writeup'
+author: "Guangyao Yan"
+date: "3/21/2021"
+output:
+  html_document: default
+  pdf_document: default
+---
+## Install and load the packages
+```{r, message=FALSE}
+library(tidyverse)
+library(mice)
+library(VIM)
+library(lattice)
+library(ggplot2)
+library(caret)
+library(rpart)
+library(rpart.plot)
+library(corrplot)
+library(rattle)
+library(randomForest)
+library(RColorBrewer)
+library(AppliedPredictiveModeling)
+library(caret)
+library(rpart.plot)
+library(randomForest)
+library(mlbench)
+library(caret)
+library(e1071)
+library(mltools)
+library(psych)
+library(ROSE)
+library(gbm)
+library(kernlab)
+library(elasticnet)
+library(rpart.plot)
+library(gmodels)
+library(xgboost)
+library(corrplot)
+```
+
+## Load the datasets
+
+```{r }
+train <- "http://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+test  <- "http://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
+tr <- read.csv(url(train), strip.white = TRUE, na.strings = c("NA",""))
+te  <- read.csv(url(test),  strip.white = TRUE, na.strings = c("NA",""))
+dim(tr)
+```
+
+## Check missing values for training dataset (tr)
+```{r }
+trmissing <- aggr(tr, numbers=TRUE, 
+              sortVars=TRUE, cex.axis=0.2, 
+              gap=0.5, ylab=c("Missing data","Pattern"))
+```
+
+## Check missing values for testing dataset (te)
+```{r , message=FALSE}
+trmissing <- aggr(te, numbers=TRUE, 
+              sortVars=TRUE, cex.axis=0.2, 
+              gap=0.5, ylab=c("Missing data","Pattern"))
+
+```
+
+## From the pattern of missing values, we should delete the columns with missing values instead of imputing
+```{r ,  message=FALSE}
+trna <- apply(tr, 2, function(x){any(is.na(x))})
+sum(trna)
+trnew <- tr[,!trna]
+dim(trnew)
+# do the same to testing dataset (te)
+tena <- apply(te, 2, function(x){any(is.na(x))})
+tenew <- te[,!trna]
+dim(tenew)
+```
+## Partition: divide the trnew dataset into training set and validating set
+```{r,  message=FALSE }
+#have an overview of the data
+glimpse(tenew)
+#delete the first 5 columns/variables that do not help us to predict 'classe'
+trnew <- trnew %>% select(-c(1,2,5,6))
+tenew <- tenew %>% select(-c(1,2,5,6))
+#turn "class" variable into factor!!!
+trnew$classe <- as.factor(trnew$classe)
+# partition
+inTrain <- createDataPartition(y= trnew$classe,
+                               p = 0.8, 
+                               list = FALSE)
+training <- trnew [inTrain, ]
+validating <- trnew [-inTrain, ]
+dim(training)
+dim(validating)
+```
+## Exploratory analysis of the training dataset (training)
+```{r }
+M <- cor(training[,-56])
+corrplot(M, method = "circle", tl.cex = 0.3,  tl.col = "black")
+```
+## ML modesl
+# 1. rpart / decision tree
+```{r }
+# cross validation 10 folds, repeat 2 times
+train_control<- trainControl(method="repeatedcv", 
+                             number=10, 
+                             repeats = 2)
+# rpart / decision tree
+set.seed(12345)
+rpart_ml <- train(classe ~ ., 
+               data = training, 
+              trControl=train_control, 
+               method="rpart")
+rpart_ml$finalModel
+confusionMatrix (predict(rpart_ml,validating),
+                 validating $ classe)
+
+```
+## ML modesl
+# 2. rf/ random forest
+```{r }
+# use the same crossvalidation from above
+# rf
+set.seed(12345)
+rf_ml <- train(classe ~ ., 
+               data = training, 
+              trControl=train_control, 
+               method="rf")
+rf_ml$finalModel
+confusionMatrix (predict(rf_ml,validating),
+                 validating $ classe)
+
+```
+
+## ML modesl
+# 3. GBM
+```{r }
+# use the same crossvalidation from above
+# GBM
+set.seed(12345)
+gbm_ml <- train(classe ~ ., 
+               data = training, 
+              trControl=train_control, 
+               method="gbm",
+              verbose = FALSE)
+gbm_ml$finalModel
+confusionMatrix (predict(gbm_ml,validating),
+                 validating $ classe)
+
+```
+## use random forest to predict the testing dataset
+```{r }
+#use the rf to predict
+predict(rf_ml, tenew)
+```
