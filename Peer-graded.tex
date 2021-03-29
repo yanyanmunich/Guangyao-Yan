@@ -1,0 +1,929 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{hyperref}
+\hypersetup{
+            pdftitle={Peer-graded Assignment: Prediction Assignment Writeup},
+            pdfauthor={Guangyao Yan},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\title{Peer-graded Assignment: Prediction Assignment Writeup}
+\author{Guangyao Yan}
+\date{3/21/2021}
+
+\begin{document}
+\maketitle
+
+\hypertarget{install-and-load-the-packages}{%
+\subsection{Install and load the
+packages}\label{install-and-load-the-packages}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(tidyverse)}
+\KeywordTok{library}\NormalTok{(mice)}
+\KeywordTok{library}\NormalTok{(VIM)}
+\KeywordTok{library}\NormalTok{(lattice)}
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\KeywordTok{library}\NormalTok{(caret)}
+\KeywordTok{library}\NormalTok{(rpart)}
+\KeywordTok{library}\NormalTok{(rpart.plot)}
+\KeywordTok{library}\NormalTok{(corrplot)}
+\KeywordTok{library}\NormalTok{(rattle)}
+\KeywordTok{library}\NormalTok{(randomForest)}
+\KeywordTok{library}\NormalTok{(RColorBrewer)}
+\KeywordTok{library}\NormalTok{(AppliedPredictiveModeling)}
+\KeywordTok{library}\NormalTok{(caret)}
+\KeywordTok{library}\NormalTok{(rpart.plot)}
+\KeywordTok{library}\NormalTok{(randomForest)}
+\KeywordTok{library}\NormalTok{(mlbench)}
+\KeywordTok{library}\NormalTok{(caret)}
+\KeywordTok{library}\NormalTok{(e1071)}
+\KeywordTok{library}\NormalTok{(mltools)}
+\KeywordTok{library}\NormalTok{(psych)}
+\KeywordTok{library}\NormalTok{(ROSE)}
+\KeywordTok{library}\NormalTok{(gbm)}
+\KeywordTok{library}\NormalTok{(kernlab)}
+\KeywordTok{library}\NormalTok{(elasticnet)}
+\KeywordTok{library}\NormalTok{(rpart.plot)}
+\KeywordTok{library}\NormalTok{(gmodels)}
+\KeywordTok{library}\NormalTok{(xgboost)}
+\KeywordTok{library}\NormalTok{(corrplot)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{load-the-datasets}{%
+\subsection{Load the datasets}\label{load-the-datasets}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{train <-}\StringTok{ "http://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"}
+\NormalTok{test  <-}\StringTok{ "http://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"}
+\NormalTok{tr <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\KeywordTok{url}\NormalTok{(train), }\DataTypeTok{strip.white =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{na.strings =} \KeywordTok{c}\NormalTok{(}\StringTok{"NA"}\NormalTok{,}\StringTok{""}\NormalTok{))}
+\NormalTok{te  <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\KeywordTok{url}\NormalTok{(test),  }\DataTypeTok{strip.white =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{na.strings =} \KeywordTok{c}\NormalTok{(}\StringTok{"NA"}\NormalTok{,}\StringTok{""}\NormalTok{))}
+\KeywordTok{dim}\NormalTok{(tr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 19622   160
+\end{verbatim}
+
+\hypertarget{check-missing-values-for-training-dataset-tr}{%
+\subsection{Check missing values for training dataset
+(tr)}\label{check-missing-values-for-training-dataset-tr}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{trmissing <-}\StringTok{ }\KeywordTok{aggr}\NormalTok{(tr, }\DataTypeTok{numbers=}\OtherTok{TRUE}\NormalTok{, }
+              \DataTypeTok{sortVars=}\OtherTok{TRUE}\NormalTok{, }\DataTypeTok{cex.axis=}\FloatTok{0.2}\NormalTok{, }
+              \DataTypeTok{gap=}\FloatTok{0.5}\NormalTok{, }\DataTypeTok{ylab=}\KeywordTok{c}\NormalTok{(}\StringTok{"Missing data"}\NormalTok{,}\StringTok{"Pattern"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Peer-graded_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\begin{verbatim}
+## 
+##  Variables sorted by number of missings: 
+##                  Variable     Count
+##        kurtosis_roll_belt 0.9793089
+##       kurtosis_picth_belt 0.9793089
+##         kurtosis_yaw_belt 0.9793089
+##        skewness_roll_belt 0.9793089
+##      skewness_roll_belt.1 0.9793089
+##         skewness_yaw_belt 0.9793089
+##             max_roll_belt 0.9793089
+##            max_picth_belt 0.9793089
+##              max_yaw_belt 0.9793089
+##             min_roll_belt 0.9793089
+##            min_pitch_belt 0.9793089
+##              min_yaw_belt 0.9793089
+##       amplitude_roll_belt 0.9793089
+##      amplitude_pitch_belt 0.9793089
+##        amplitude_yaw_belt 0.9793089
+##      var_total_accel_belt 0.9793089
+##             avg_roll_belt 0.9793089
+##          stddev_roll_belt 0.9793089
+##             var_roll_belt 0.9793089
+##            avg_pitch_belt 0.9793089
+##         stddev_pitch_belt 0.9793089
+##            var_pitch_belt 0.9793089
+##              avg_yaw_belt 0.9793089
+##           stddev_yaw_belt 0.9793089
+##              var_yaw_belt 0.9793089
+##             var_accel_arm 0.9793089
+##              avg_roll_arm 0.9793089
+##           stddev_roll_arm 0.9793089
+##              var_roll_arm 0.9793089
+##             avg_pitch_arm 0.9793089
+##          stddev_pitch_arm 0.9793089
+##             var_pitch_arm 0.9793089
+##               avg_yaw_arm 0.9793089
+##            stddev_yaw_arm 0.9793089
+##               var_yaw_arm 0.9793089
+##         kurtosis_roll_arm 0.9793089
+##        kurtosis_picth_arm 0.9793089
+##          kurtosis_yaw_arm 0.9793089
+##         skewness_roll_arm 0.9793089
+##        skewness_pitch_arm 0.9793089
+##          skewness_yaw_arm 0.9793089
+##              max_roll_arm 0.9793089
+##             max_picth_arm 0.9793089
+##               max_yaw_arm 0.9793089
+##              min_roll_arm 0.9793089
+##             min_pitch_arm 0.9793089
+##               min_yaw_arm 0.9793089
+##        amplitude_roll_arm 0.9793089
+##       amplitude_pitch_arm 0.9793089
+##         amplitude_yaw_arm 0.9793089
+##    kurtosis_roll_dumbbell 0.9793089
+##   kurtosis_picth_dumbbell 0.9793089
+##     kurtosis_yaw_dumbbell 0.9793089
+##    skewness_roll_dumbbell 0.9793089
+##   skewness_pitch_dumbbell 0.9793089
+##     skewness_yaw_dumbbell 0.9793089
+##         max_roll_dumbbell 0.9793089
+##        max_picth_dumbbell 0.9793089
+##          max_yaw_dumbbell 0.9793089
+##         min_roll_dumbbell 0.9793089
+##        min_pitch_dumbbell 0.9793089
+##          min_yaw_dumbbell 0.9793089
+##   amplitude_roll_dumbbell 0.9793089
+##  amplitude_pitch_dumbbell 0.9793089
+##    amplitude_yaw_dumbbell 0.9793089
+##        var_accel_dumbbell 0.9793089
+##         avg_roll_dumbbell 0.9793089
+##      stddev_roll_dumbbell 0.9793089
+##         var_roll_dumbbell 0.9793089
+##        avg_pitch_dumbbell 0.9793089
+##     stddev_pitch_dumbbell 0.9793089
+##        var_pitch_dumbbell 0.9793089
+##          avg_yaw_dumbbell 0.9793089
+##       stddev_yaw_dumbbell 0.9793089
+##          var_yaw_dumbbell 0.9793089
+##     kurtosis_roll_forearm 0.9793089
+##    kurtosis_picth_forearm 0.9793089
+##      kurtosis_yaw_forearm 0.9793089
+##     skewness_roll_forearm 0.9793089
+##    skewness_pitch_forearm 0.9793089
+##      skewness_yaw_forearm 0.9793089
+##          max_roll_forearm 0.9793089
+##         max_picth_forearm 0.9793089
+##           max_yaw_forearm 0.9793089
+##          min_roll_forearm 0.9793089
+##         min_pitch_forearm 0.9793089
+##           min_yaw_forearm 0.9793089
+##    amplitude_roll_forearm 0.9793089
+##   amplitude_pitch_forearm 0.9793089
+##     amplitude_yaw_forearm 0.9793089
+##         var_accel_forearm 0.9793089
+##          avg_roll_forearm 0.9793089
+##       stddev_roll_forearm 0.9793089
+##          var_roll_forearm 0.9793089
+##         avg_pitch_forearm 0.9793089
+##      stddev_pitch_forearm 0.9793089
+##         var_pitch_forearm 0.9793089
+##           avg_yaw_forearm 0.9793089
+##        stddev_yaw_forearm 0.9793089
+##           var_yaw_forearm 0.9793089
+##                         X 0.0000000
+##                 user_name 0.0000000
+##      raw_timestamp_part_1 0.0000000
+##      raw_timestamp_part_2 0.0000000
+##            cvtd_timestamp 0.0000000
+##                new_window 0.0000000
+##                num_window 0.0000000
+##                 roll_belt 0.0000000
+##                pitch_belt 0.0000000
+##                  yaw_belt 0.0000000
+##          total_accel_belt 0.0000000
+##              gyros_belt_x 0.0000000
+##              gyros_belt_y 0.0000000
+##              gyros_belt_z 0.0000000
+##              accel_belt_x 0.0000000
+##              accel_belt_y 0.0000000
+##              accel_belt_z 0.0000000
+##             magnet_belt_x 0.0000000
+##             magnet_belt_y 0.0000000
+##             magnet_belt_z 0.0000000
+##                  roll_arm 0.0000000
+##                 pitch_arm 0.0000000
+##                   yaw_arm 0.0000000
+##           total_accel_arm 0.0000000
+##               gyros_arm_x 0.0000000
+##               gyros_arm_y 0.0000000
+##               gyros_arm_z 0.0000000
+##               accel_arm_x 0.0000000
+##               accel_arm_y 0.0000000
+##               accel_arm_z 0.0000000
+##              magnet_arm_x 0.0000000
+##              magnet_arm_y 0.0000000
+##              magnet_arm_z 0.0000000
+##             roll_dumbbell 0.0000000
+##            pitch_dumbbell 0.0000000
+##              yaw_dumbbell 0.0000000
+##      total_accel_dumbbell 0.0000000
+##          gyros_dumbbell_x 0.0000000
+##          gyros_dumbbell_y 0.0000000
+##          gyros_dumbbell_z 0.0000000
+##          accel_dumbbell_x 0.0000000
+##          accel_dumbbell_y 0.0000000
+##          accel_dumbbell_z 0.0000000
+##         magnet_dumbbell_x 0.0000000
+##         magnet_dumbbell_y 0.0000000
+##         magnet_dumbbell_z 0.0000000
+##              roll_forearm 0.0000000
+##             pitch_forearm 0.0000000
+##               yaw_forearm 0.0000000
+##       total_accel_forearm 0.0000000
+##           gyros_forearm_x 0.0000000
+##           gyros_forearm_y 0.0000000
+##           gyros_forearm_z 0.0000000
+##           accel_forearm_x 0.0000000
+##           accel_forearm_y 0.0000000
+##           accel_forearm_z 0.0000000
+##          magnet_forearm_x 0.0000000
+##          magnet_forearm_y 0.0000000
+##          magnet_forearm_z 0.0000000
+##                    classe 0.0000000
+\end{verbatim}
+
+\hypertarget{check-missing-values-for-testing-dataset-te}{%
+\subsection{Check missing values for testing dataset
+(te)}\label{check-missing-values-for-testing-dataset-te}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{trmissing <-}\StringTok{ }\KeywordTok{aggr}\NormalTok{(te, }\DataTypeTok{numbers=}\OtherTok{TRUE}\NormalTok{, }
+              \DataTypeTok{sortVars=}\OtherTok{TRUE}\NormalTok{, }\DataTypeTok{cex.axis=}\FloatTok{0.2}\NormalTok{, }
+              \DataTypeTok{gap=}\FloatTok{0.5}\NormalTok{, }\DataTypeTok{ylab=}\KeywordTok{c}\NormalTok{(}\StringTok{"Missing data"}\NormalTok{,}\StringTok{"Pattern"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Peer-graded_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+\begin{verbatim}
+## 
+##  Variables sorted by number of missings: 
+##                  Variable Count
+##        kurtosis_roll_belt     1
+##       kurtosis_picth_belt     1
+##         kurtosis_yaw_belt     1
+##        skewness_roll_belt     1
+##      skewness_roll_belt.1     1
+##         skewness_yaw_belt     1
+##             max_roll_belt     1
+##            max_picth_belt     1
+##              max_yaw_belt     1
+##             min_roll_belt     1
+##            min_pitch_belt     1
+##              min_yaw_belt     1
+##       amplitude_roll_belt     1
+##      amplitude_pitch_belt     1
+##        amplitude_yaw_belt     1
+##      var_total_accel_belt     1
+##             avg_roll_belt     1
+##          stddev_roll_belt     1
+##             var_roll_belt     1
+##            avg_pitch_belt     1
+##         stddev_pitch_belt     1
+##            var_pitch_belt     1
+##              avg_yaw_belt     1
+##           stddev_yaw_belt     1
+##              var_yaw_belt     1
+##             var_accel_arm     1
+##              avg_roll_arm     1
+##           stddev_roll_arm     1
+##              var_roll_arm     1
+##             avg_pitch_arm     1
+##          stddev_pitch_arm     1
+##             var_pitch_arm     1
+##               avg_yaw_arm     1
+##            stddev_yaw_arm     1
+##               var_yaw_arm     1
+##         kurtosis_roll_arm     1
+##        kurtosis_picth_arm     1
+##          kurtosis_yaw_arm     1
+##         skewness_roll_arm     1
+##        skewness_pitch_arm     1
+##          skewness_yaw_arm     1
+##              max_roll_arm     1
+##             max_picth_arm     1
+##               max_yaw_arm     1
+##              min_roll_arm     1
+##             min_pitch_arm     1
+##               min_yaw_arm     1
+##        amplitude_roll_arm     1
+##       amplitude_pitch_arm     1
+##         amplitude_yaw_arm     1
+##    kurtosis_roll_dumbbell     1
+##   kurtosis_picth_dumbbell     1
+##     kurtosis_yaw_dumbbell     1
+##    skewness_roll_dumbbell     1
+##   skewness_pitch_dumbbell     1
+##     skewness_yaw_dumbbell     1
+##         max_roll_dumbbell     1
+##        max_picth_dumbbell     1
+##          max_yaw_dumbbell     1
+##         min_roll_dumbbell     1
+##        min_pitch_dumbbell     1
+##          min_yaw_dumbbell     1
+##   amplitude_roll_dumbbell     1
+##  amplitude_pitch_dumbbell     1
+##    amplitude_yaw_dumbbell     1
+##        var_accel_dumbbell     1
+##         avg_roll_dumbbell     1
+##      stddev_roll_dumbbell     1
+##         var_roll_dumbbell     1
+##        avg_pitch_dumbbell     1
+##     stddev_pitch_dumbbell     1
+##        var_pitch_dumbbell     1
+##          avg_yaw_dumbbell     1
+##       stddev_yaw_dumbbell     1
+##          var_yaw_dumbbell     1
+##     kurtosis_roll_forearm     1
+##    kurtosis_picth_forearm     1
+##      kurtosis_yaw_forearm     1
+##     skewness_roll_forearm     1
+##    skewness_pitch_forearm     1
+##      skewness_yaw_forearm     1
+##          max_roll_forearm     1
+##         max_picth_forearm     1
+##           max_yaw_forearm     1
+##          min_roll_forearm     1
+##         min_pitch_forearm     1
+##           min_yaw_forearm     1
+##    amplitude_roll_forearm     1
+##   amplitude_pitch_forearm     1
+##     amplitude_yaw_forearm     1
+##         var_accel_forearm     1
+##          avg_roll_forearm     1
+##       stddev_roll_forearm     1
+##          var_roll_forearm     1
+##         avg_pitch_forearm     1
+##      stddev_pitch_forearm     1
+##         var_pitch_forearm     1
+##           avg_yaw_forearm     1
+##        stddev_yaw_forearm     1
+##           var_yaw_forearm     1
+##                         X     0
+##                 user_name     0
+##      raw_timestamp_part_1     0
+##      raw_timestamp_part_2     0
+##            cvtd_timestamp     0
+##                new_window     0
+##                num_window     0
+##                 roll_belt     0
+##                pitch_belt     0
+##                  yaw_belt     0
+##          total_accel_belt     0
+##              gyros_belt_x     0
+##              gyros_belt_y     0
+##              gyros_belt_z     0
+##              accel_belt_x     0
+##              accel_belt_y     0
+##              accel_belt_z     0
+##             magnet_belt_x     0
+##             magnet_belt_y     0
+##             magnet_belt_z     0
+##                  roll_arm     0
+##                 pitch_arm     0
+##                   yaw_arm     0
+##           total_accel_arm     0
+##               gyros_arm_x     0
+##               gyros_arm_y     0
+##               gyros_arm_z     0
+##               accel_arm_x     0
+##               accel_arm_y     0
+##               accel_arm_z     0
+##              magnet_arm_x     0
+##              magnet_arm_y     0
+##              magnet_arm_z     0
+##             roll_dumbbell     0
+##            pitch_dumbbell     0
+##              yaw_dumbbell     0
+##      total_accel_dumbbell     0
+##          gyros_dumbbell_x     0
+##          gyros_dumbbell_y     0
+##          gyros_dumbbell_z     0
+##          accel_dumbbell_x     0
+##          accel_dumbbell_y     0
+##          accel_dumbbell_z     0
+##         magnet_dumbbell_x     0
+##         magnet_dumbbell_y     0
+##         magnet_dumbbell_z     0
+##              roll_forearm     0
+##             pitch_forearm     0
+##               yaw_forearm     0
+##       total_accel_forearm     0
+##           gyros_forearm_x     0
+##           gyros_forearm_y     0
+##           gyros_forearm_z     0
+##           accel_forearm_x     0
+##           accel_forearm_y     0
+##           accel_forearm_z     0
+##          magnet_forearm_x     0
+##          magnet_forearm_y     0
+##          magnet_forearm_z     0
+##                problem_id     0
+\end{verbatim}
+
+\hypertarget{from-the-pattern-of-missing-values-we-should-delete-the-columns-with-missing-values-instead-of-imputing}{%
+\subsection{From the pattern of missing values, we should delete the
+columns with missing values instead of
+imputing}\label{from-the-pattern-of-missing-values-we-should-delete-the-columns-with-missing-values-instead-of-imputing}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{trna <-}\StringTok{ }\KeywordTok{apply}\NormalTok{(tr, }\DecValTok{2}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x)\{}\KeywordTok{any}\NormalTok{(}\KeywordTok{is.na}\NormalTok{(x))\})}
+\KeywordTok{sum}\NormalTok{(trna)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 100
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{trnew <-}\StringTok{ }\NormalTok{tr[,}\OperatorTok{!}\NormalTok{trna]}
+\KeywordTok{dim}\NormalTok{(trnew)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 19622    60
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# do the same to testing dataset (te)}
+\NormalTok{tena <-}\StringTok{ }\KeywordTok{apply}\NormalTok{(te, }\DecValTok{2}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x)\{}\KeywordTok{any}\NormalTok{(}\KeywordTok{is.na}\NormalTok{(x))\})}
+\NormalTok{tenew <-}\StringTok{ }\NormalTok{te[,}\OperatorTok{!}\NormalTok{trna]}
+\KeywordTok{dim}\NormalTok{(tenew)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 20 60
+\end{verbatim}
+
+\hypertarget{partition-divide-the-trnew-dataset-into-training-set-and-validating-set}{%
+\subsection{Partition: divide the trnew dataset into training set and
+validating
+set}\label{partition-divide-the-trnew-dataset-into-training-set-and-validating-set}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#have an overview of the data}
+\KeywordTok{glimpse}\NormalTok{(tenew)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows: 20
+## Columns: 60
+## $ X                    <int> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15~
+## $ user_name            <chr> "pedro", "jeremy", "jeremy", "adelmo", "eurico", ~
+## $ raw_timestamp_part_1 <int> 1323095002, 1322673067, 1322673075, 1322832789, 1~
+## $ raw_timestamp_part_2 <int> 868349, 778725, 342967, 560311, 814776, 510661, 7~
+## $ cvtd_timestamp       <chr> "05/12/2011 14:23", "30/11/2011 17:11", "30/11/20~
+## $ new_window           <chr> "no", "no", "no", "no", "no", "no", "no", "no", "~
+## $ num_window           <int> 74, 431, 439, 194, 235, 504, 485, 440, 323, 664, ~
+## $ roll_belt            <dbl> 123.00, 1.02, 0.87, 125.00, 1.35, -5.92, 1.20, 0.~
+## $ pitch_belt           <dbl> 27.00, 4.87, 1.82, -41.60, 3.33, 1.59, 4.44, 4.15~
+## $ yaw_belt             <dbl> -4.75, -88.90, -88.50, 162.00, -88.60, -87.70, -8~
+## $ total_accel_belt     <int> 20, 4, 5, 17, 3, 4, 4, 4, 4, 18, 3, 5, 3, 5, 4, 2~
+## $ gyros_belt_x         <dbl> -0.50, -0.06, 0.05, 0.11, 0.03, 0.10, -0.06, -0.1~
+## $ gyros_belt_y         <dbl> -0.02, -0.02, 0.02, 0.11, 0.02, 0.05, 0.00, -0.02~
+## $ gyros_belt_z         <dbl> -0.46, -0.07, 0.03, -0.16, 0.00, -0.13, 0.00, -0.~
+## $ accel_belt_x         <int> -38, -13, 1, 46, -8, -11, -14, -10, -15, -25, -18~
+## $ accel_belt_y         <int> 69, 11, -1, 45, 4, -16, 2, -2, 1, 63, 4, 8, 5, 2,~
+## $ accel_belt_z         <int> -179, 39, 49, -156, 27, 38, 35, 42, 32, -158, 27,~
+## $ magnet_belt_x        <int> -13, 43, 29, 169, 33, 31, 50, 39, -6, 10, 6, 51, ~
+## $ magnet_belt_y        <int> 581, 636, 631, 608, 566, 638, 622, 635, 600, 601,~
+## $ magnet_belt_z        <int> -382, -309, -312, -304, -418, -291, -315, -305, -~
+## $ roll_arm             <dbl> 40.70, 0.00, 0.00, -109.00, 76.10, 0.00, 0.00, 0.~
+## $ pitch_arm            <dbl> -27.80, 0.00, 0.00, 55.00, 2.76, 0.00, 0.00, 0.00~
+## $ yaw_arm              <dbl> 178.0, 0.0, 0.0, -142.0, 102.0, 0.0, 0.0, 0.0, -1~
+## $ total_accel_arm      <int> 10, 38, 44, 25, 29, 14, 15, 22, 34, 32, 33, 30, 2~
+## $ gyros_arm_x          <dbl> -1.65, -1.17, 2.10, 0.22, -1.96, 0.02, 2.36, -3.7~
+## $ gyros_arm_y          <dbl> 0.48, 0.85, -1.36, -0.51, 0.79, 0.05, -1.01, 1.85~
+## $ gyros_arm_z          <dbl> -0.18, -0.43, 1.13, 0.92, -0.54, -0.07, 0.89, -0.~
+## $ accel_arm_x          <int> 16, -290, -341, -238, -197, -26, 99, -98, -287, -~
+## $ accel_arm_y          <int> 38, 215, 245, -57, 200, 130, 79, 175, 111, -42, 1~
+## $ accel_arm_z          <int> 93, -90, -87, 6, -30, -19, -67, -78, -122, -80, -~
+## $ magnet_arm_x         <int> -326, -325, -264, -173, -170, 396, 702, 535, -367~
+## $ magnet_arm_y         <int> 385, 447, 474, 257, 275, 176, 15, 215, 335, 294, ~
+## $ magnet_arm_z         <int> 481, 434, 413, 633, 617, 516, 217, 385, 520, 493,~
+## $ roll_dumbbell        <dbl> -17.737480, 54.477605, 57.070308, 43.109268, -101~
+## $ pitch_dumbbell       <dbl> 24.96085, -53.69758, -51.37303, -30.04885, -53.43~
+## $ yaw_dumbbell         <dbl> 126.235964, -75.514799, -75.202873, -103.320032, ~
+## $ total_accel_dumbbell <int> 9, 31, 29, 18, 4, 29, 29, 29, 3, 2, 1, 30, 8, 30,~
+## $ gyros_dumbbell_x     <dbl> 0.64, 0.34, 0.39, 0.10, 0.29, -0.59, 0.34, 0.37, ~
+## $ gyros_dumbbell_y     <dbl> 0.06, 0.05, 0.14, -0.02, -0.47, 0.80, 0.16, 0.14,~
+## $ gyros_dumbbell_z     <dbl> -0.61, -0.71, -0.34, 0.05, -0.46, 1.10, -0.23, -0~
+## $ accel_dumbbell_x     <int> 21, -153, -141, -51, -18, -138, -145, -140, 0, -7~
+## $ accel_dumbbell_y     <int> -15, 155, 155, 72, -30, 166, 150, 159, 25, -20, 1~
+## $ accel_dumbbell_z     <int> 81, -205, -196, -148, -5, -186, -190, -191, 9, 7,~
+## $ magnet_dumbbell_x    <int> 523, -502, -506, -576, -424, -543, -484, -515, -5~
+## $ magnet_dumbbell_y    <int> -528, 388, 349, 238, 252, 262, 354, 350, 348, 321~
+## $ magnet_dumbbell_z    <int> -56, -36, 41, 53, 312, 96, 97, 53, -32, -164, -23~
+## $ roll_forearm         <dbl> 141.0, 109.0, 131.0, 0.0, -176.0, 150.0, 155.0, -~
+## $ pitch_forearm        <dbl> 49.30, -17.60, -32.60, 0.00, -2.16, 1.46, 34.50, ~
+## $ yaw_forearm          <dbl> 156.0, 106.0, 93.0, 0.0, -47.9, 89.7, 152.0, -89.~
+## $ total_accel_forearm  <int> 33, 39, 34, 43, 24, 43, 32, 47, 36, 24, 46, 36, 2~
+## $ gyros_forearm_x      <dbl> 0.74, 1.12, 0.18, 1.38, -0.75, -0.88, -0.53, 0.63~
+## $ gyros_forearm_y      <dbl> -3.34, -2.78, -0.79, 0.69, 3.10, 4.26, 1.80, -0.7~
+## $ gyros_forearm_z      <dbl> -0.59, -0.18, 0.28, 1.80, 0.80, 1.35, 0.75, 0.49,~
+## $ accel_forearm_x      <int> -110, 212, 154, -92, 131, 230, -192, -151, 195, -~
+## $ accel_forearm_y      <int> 267, 297, 271, 406, -93, 322, 170, -331, 204, 98,~
+## $ accel_forearm_z      <int> -149, -118, -129, -39, 172, -144, -175, -282, -21~
+## $ magnet_forearm_x     <int> -714, -237, -51, -233, 375, -300, -678, -109, 0, ~
+## $ magnet_forearm_y     <int> 419, 791, 698, 783, -787, 800, 284, -619, 652, 72~
+## $ magnet_forearm_z     <int> 617, 873, 783, 521, 91, 884, 585, -32, 469, 512, ~
+## $ problem_id           <int> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15~
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#delete the first 5 columns/variables that do not help us to predict 'classe'}
+\NormalTok{trnew <-}\StringTok{ }\NormalTok{trnew }\OperatorTok{%>%}\StringTok{ }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{6}\NormalTok{))}
+\NormalTok{tenew <-}\StringTok{ }\NormalTok{tenew }\OperatorTok{%>%}\StringTok{ }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{6}\NormalTok{))}
+\CommentTok{#turn "class" variable into factor!!!}
+\NormalTok{trnew}\OperatorTok{$}\NormalTok{classe <-}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(trnew}\OperatorTok{$}\NormalTok{classe)}
+\CommentTok{# partition}
+\NormalTok{inTrain <-}\StringTok{ }\KeywordTok{createDataPartition}\NormalTok{(}\DataTypeTok{y=}\NormalTok{ trnew}\OperatorTok{$}\NormalTok{classe,}
+                               \DataTypeTok{p =} \FloatTok{0.8}\NormalTok{, }
+                               \DataTypeTok{list =} \OtherTok{FALSE}\NormalTok{)}
+\NormalTok{training <-}\StringTok{ }\NormalTok{trnew [inTrain, ]}
+\NormalTok{validating <-}\StringTok{ }\NormalTok{trnew [}\OperatorTok{-}\NormalTok{inTrain, ]}
+\KeywordTok{dim}\NormalTok{(training)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 15699    56
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{dim}\NormalTok{(validating)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3923   56
+\end{verbatim}
+
+\hypertarget{exploratory-analysis-of-the-training-dataset-training}{%
+\subsection{Exploratory analysis of the training dataset
+(training)}\label{exploratory-analysis-of-the-training-dataset-training}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{M <-}\StringTok{ }\KeywordTok{cor}\NormalTok{(training[,}\OperatorTok{-}\DecValTok{56}\NormalTok{])}
+\KeywordTok{corrplot}\NormalTok{(M, }\DataTypeTok{method =} \StringTok{"circle"}\NormalTok{, }\DataTypeTok{tl.cex =} \FloatTok{0.3}\NormalTok{,  }\DataTypeTok{tl.col =} \StringTok{"black"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Peer-graded_files/figure-latex/unnamed-chunk-7-1.pdf}
+\#\# ML modesl \# 1. rpart / decision tree
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# cross validation 10 folds, repeat 2 times}
+\NormalTok{train_control<-}\StringTok{ }\KeywordTok{trainControl}\NormalTok{(}\DataTypeTok{method=}\StringTok{"repeatedcv"}\NormalTok{, }
+                             \DataTypeTok{number=}\DecValTok{10}\NormalTok{, }
+                             \DataTypeTok{repeats =} \DecValTok{2}\NormalTok{)}
+\CommentTok{# rpart / decision tree}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{12345}\NormalTok{)}
+\NormalTok{rpart_ml <-}\StringTok{ }\KeywordTok{train}\NormalTok{(classe }\OperatorTok{~}\StringTok{ }\NormalTok{., }
+               \DataTypeTok{data =}\NormalTok{ training, }
+              \DataTypeTok{trControl=}\NormalTok{train_control, }
+               \DataTypeTok{method=}\StringTok{"rpart"}\NormalTok{)}
+\NormalTok{rpart_ml}\OperatorTok{$}\NormalTok{finalModel}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## n= 15699 
+## 
+## node), split, n, loss, yval, (yprob)
+##       * denotes terminal node
+## 
+##  1) root 15699 11235 A (0.28 0.19 0.17 0.16 0.18)  
+##    2) roll_belt< 130.5 14406  9954 A (0.31 0.21 0.19 0.18 0.11)  
+##      4) pitch_forearm< -33.95 1254     5 A (1 0.004 0 0 0) *
+##      5) pitch_forearm>=-33.95 13152  9949 A (0.24 0.23 0.21 0.2 0.12)  
+##       10) magnet_dumbbell_y< 439.5 11116  7979 A (0.28 0.18 0.24 0.19 0.11)  
+##         20) roll_forearm< 123.5 6897  4086 A (0.41 0.18 0.18 0.17 0.062) *
+##         21) roll_forearm>=123.5 4219  2814 C (0.077 0.18 0.33 0.22 0.19) *
+##       11) magnet_dumbbell_y>=439.5 2036   994 B (0.032 0.51 0.042 0.23 0.19) *
+##    3) roll_belt>=130.5 1293    12 E (0.0093 0 0 0 0.99) *
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{confusionMatrix}\NormalTok{ (}\KeywordTok{predict}\NormalTok{(rpart_ml,validating),}
+\NormalTok{                 validating }\OperatorTok{$}\StringTok{ }\NormalTok{classe)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction    A    B    C    D    E
+##          A 1020  331  339  281   99
+##          B   15  244   23  105  106
+##          C   79  184  322  257  166
+##          D    0    0    0    0    0
+##          E    2    0    0    0  350
+## 
+## Overall Statistics
+##                                           
+##                Accuracy : 0.4935          
+##                  95% CI : (0.4777, 0.5093)
+##     No Information Rate : 0.2845          
+##     P-Value [Acc > NIR] : < 2.2e-16       
+##                                           
+##                   Kappa : 0.3373          
+##                                           
+##  Mcnemar's Test P-Value : NA              
+## 
+## Statistics by Class:
+## 
+##                      Class: A Class: B Class: C Class: D Class: E
+## Sensitivity            0.9140   0.3215  0.47076   0.0000  0.48544
+## Specificity            0.6259   0.9213  0.78821   1.0000  0.99938
+## Pos Pred Value         0.4928   0.4949  0.31944      NaN  0.99432
+## Neg Pred Value         0.9482   0.8499  0.87581   0.8361  0.89611
+## Prevalence             0.2845   0.1935  0.17436   0.1639  0.18379
+## Detection Rate         0.2600   0.0622  0.08208   0.0000  0.08922
+## Detection Prevalence   0.5277   0.1257  0.25695   0.0000  0.08973
+## Balanced Accuracy      0.7700   0.6214  0.62948   0.5000  0.74241
+\end{verbatim}
+
+\hypertarget{ml-modesl}{%
+\subsection{ML modesl}\label{ml-modesl}}
+
+\hypertarget{rf-random-forest}{%
+\section{2. rf/ random forest}\label{rf-random-forest}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# use the same crossvalidation from above}
+\CommentTok{# rf}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{12345}\NormalTok{)}
+\NormalTok{rf_ml <-}\StringTok{ }\KeywordTok{train}\NormalTok{(classe }\OperatorTok{~}\StringTok{ }\NormalTok{., }
+               \DataTypeTok{data =}\NormalTok{ training, }
+              \DataTypeTok{trControl=}\NormalTok{train_control, }
+               \DataTypeTok{method=}\StringTok{"rf"}\NormalTok{)}
+\NormalTok{rf_ml}\OperatorTok{$}\NormalTok{finalModel}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+##  randomForest(x = x, y = y, mtry = param$mtry) 
+##                Type of random forest: classification
+##                      Number of trees: 500
+## No. of variables tried at each split: 28
+## 
+##         OOB estimate of  error rate: 0.1%
+## Confusion matrix:
+##      A    B    C    D    E class.error
+## A 4464    0    0    0    0 0.000000000
+## B    3 3033    2    0    0 0.001645820
+## C    0    4 2734    0    0 0.001460920
+## D    0    0    5 2567    1 0.002331908
+## E    0    0    0    0 2886 0.000000000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{confusionMatrix}\NormalTok{ (}\KeywordTok{predict}\NormalTok{(rf_ml,validating),}
+\NormalTok{                 validating }\OperatorTok{$}\StringTok{ }\NormalTok{classe)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction    A    B    C    D    E
+##          A 1116    0    0    0    0
+##          B    0  759    1    0    0
+##          C    0    0  683    3    0
+##          D    0    0    0  640    0
+##          E    0    0    0    0  721
+## 
+## Overall Statistics
+##                                           
+##                Accuracy : 0.999           
+##                  95% CI : (0.9974, 0.9997)
+##     No Information Rate : 0.2845          
+##     P-Value [Acc > NIR] : < 2.2e-16       
+##                                           
+##                   Kappa : 0.9987          
+##                                           
+##  Mcnemar's Test P-Value : NA              
+## 
+## Statistics by Class:
+## 
+##                      Class: A Class: B Class: C Class: D Class: E
+## Sensitivity            1.0000   1.0000   0.9985   0.9953   1.0000
+## Specificity            1.0000   0.9997   0.9991   1.0000   1.0000
+## Pos Pred Value         1.0000   0.9987   0.9956   1.0000   1.0000
+## Neg Pred Value         1.0000   1.0000   0.9997   0.9991   1.0000
+## Prevalence             0.2845   0.1935   0.1744   0.1639   0.1838
+## Detection Rate         0.2845   0.1935   0.1741   0.1631   0.1838
+## Detection Prevalence   0.2845   0.1937   0.1749   0.1631   0.1838
+## Balanced Accuracy      1.0000   0.9998   0.9988   0.9977   1.0000
+\end{verbatim}
+
+\hypertarget{ml-modesl-1}{%
+\subsection{ML modesl}\label{ml-modesl-1}}
+
+\hypertarget{gbm}{%
+\section{3. GBM}\label{gbm}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# use the same crossvalidation from above}
+\CommentTok{# GBM}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{12345}\NormalTok{)}
+\NormalTok{gbm_ml <-}\StringTok{ }\KeywordTok{train}\NormalTok{(classe }\OperatorTok{~}\StringTok{ }\NormalTok{., }
+               \DataTypeTok{data =}\NormalTok{ training, }
+              \DataTypeTok{trControl=}\NormalTok{train_control, }
+               \DataTypeTok{method=}\StringTok{"gbm"}\NormalTok{,}
+              \DataTypeTok{verbose =} \OtherTok{FALSE}\NormalTok{)}
+\NormalTok{gbm_ml}\OperatorTok{$}\NormalTok{finalModel}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## A gradient boosted model with multinomial loss function.
+## 150 iterations were performed.
+## There were 55 predictors of which 55 had non-zero influence.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{confusionMatrix}\NormalTok{ (}\KeywordTok{predict}\NormalTok{(gbm_ml,validating),}
+\NormalTok{                 validating }\OperatorTok{$}\StringTok{ }\NormalTok{classe)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction    A    B    C    D    E
+##          A 1113    0    0    0    0
+##          B    3  757    2    0    0
+##          C    0    2  681    2    0
+##          D    0    0    1  640    1
+##          E    0    0    0    1  720
+## 
+## Overall Statistics
+##                                           
+##                Accuracy : 0.9969          
+##                  95% CI : (0.9947, 0.9984)
+##     No Information Rate : 0.2845          
+##     P-Value [Acc > NIR] : < 2.2e-16       
+##                                           
+##                   Kappa : 0.9961          
+##                                           
+##  Mcnemar's Test P-Value : NA              
+## 
+## Statistics by Class:
+## 
+##                      Class: A Class: B Class: C Class: D Class: E
+## Sensitivity            0.9973   0.9974   0.9956   0.9953   0.9986
+## Specificity            1.0000   0.9984   0.9988   0.9994   0.9997
+## Pos Pred Value         1.0000   0.9934   0.9942   0.9969   0.9986
+## Neg Pred Value         0.9989   0.9994   0.9991   0.9991   0.9997
+## Prevalence             0.2845   0.1935   0.1744   0.1639   0.1838
+## Detection Rate         0.2837   0.1930   0.1736   0.1631   0.1835
+## Detection Prevalence   0.2837   0.1942   0.1746   0.1637   0.1838
+## Balanced Accuracy      0.9987   0.9979   0.9972   0.9974   0.9992
+\end{verbatim}
+
+\hypertarget{use-random-forest-to-predict-the-testing-dataset}{%
+\subsection{use random forest to predict the testing
+dataset}\label{use-random-forest-to-predict-the-testing-dataset}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#use the rf to predict}
+\KeywordTok{predict}\NormalTok{(rf_ml, tenew)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] B A B A A E D B A A B C B A E E A B B B
+## Levels: A B C D E
+\end{verbatim}
+
+\end{document}
